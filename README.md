@@ -6,18 +6,30 @@ This project provisions a complete AWS network stack using Terraform.
 terraform/
 │
 ├── ec2/               # EC2 instances
+
 ├── iam/               # IAM roles and policies
+
 ├── igw/               # Internet Gateway
+
 ├── rds/               # RDS databases
+
 ├── route_tables/      # Route tables
+
 ├── security_groups/   # Security groups
+
 ├── ssm/               # SSM parameters
+
 ├── subnets/           # Public & private subnets
+
 ├── vpc/               # VPC configuration
 │
+
 ├── europe.tfvars      # Environment variables
+
 ├── tf.sh              # Helper script
+
 ├── .gitignore
+
 └── README.md
 
 
