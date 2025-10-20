@@ -4,13 +4,8 @@ This project provisions a complete AWS network stack using Terraform.
 
 ## Structure
 terraform/
+│
 ├── ec2/               # EC2 instances
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-│   ├── providers.tf
-│   ├── locals.tf
-│   └── data.tf
 ├── iam/               # IAM roles and policies
 ├── igw/               # Internet Gateway
 ├── rds/               # RDS databases
@@ -21,7 +16,7 @@ terraform/
 ├── vpc/               # VPC configuration
 │
 ├── europe.tfvars      # Environment variables
-├── tf.sh              # Helper script for Terraform commands
+├── tf.sh              # Helper script
 ├── .gitignore
 └── README.md
 
