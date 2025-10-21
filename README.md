@@ -39,10 +39,10 @@ terraform/
 2) Create the following parameters in the SSM parameter store in the "eu-central-1"-region:
 | Name                            | Description               | Tier     | Type         | Data Type | Value              |
 | ------------------------------- | ------------------------- | -------- | ------------ | --------- | ------------------ |
-| `/A4L/Wordpress/DBUser`         | Wordpress Database User   | Standard | String       | text      | set value          |
-| `/A4L/Wordpress/DBName`         | Wordpress Database Name   | Standard | String       | text      | set value          |
-| `/A4L/Wordpress/DBPassword`     | Wordpress DB Password     | Standard | SecureString | text      | set value          |
-| `/A4L/Wordpress/DBRootPassword` | Wordpress DBRoot Password | Standard | SecureString | text      | set value          |
+| `/dev/wp/DBUser`         | Wordpress Database User   | Standard | String       | text      | set value          |
+| `/dev/wp/DBName`         | Wordpress Database Name   | Standard | String       | text      | set value          |
+| `/dev/wp/DBPassword`     | Wordpress DB Password     | Standard | SecureString | text      | set value          |
+| `/dev/wp/DBRootPassword` | Wordpress DBRoot Password | Standard | SecureString | text      | set value          |
 
 
 
