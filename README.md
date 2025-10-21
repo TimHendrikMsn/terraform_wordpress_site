@@ -1,62 +1,83 @@
-# Terraform AWS Infrastructure
+# 🌍 WordPress Infrastructure on AWS (Terraform)
 
-This project provisions a complete AWS network stack using Terraform.
+A terraform repo to create the network, IAM, and data layers for a WordPress deployment on AWS. This repo is structured by environment (at the moment just `dev`) with reusable modules under `modules/`.
 
-## Structure
+
+## 📁 Project structure
+
+```
 terraform/
-│
-├── ec2/               # EC2 instances
+  dev/
+    iam/
+    network/
+    storage/
+    compute/ (at some point)
+  modules/
+    ec2/ (at some point)
+    igw/
+    rds/
+    route_tables/
+    security_groups/
+    subnets/
+    vpc/
+```
 
-├── iam/               # IAM roles and policies
+Each environment (e.g. `terraform/dev`) has its own state and configs, while `terraform/modules` contains reusable building blocks.
 
-├── igw/               # Internet Gateway
+---
 
-├── rds/               # RDS databases
+## 🧰 Prerequisites
+- Terraform >= 1.0
+- AWS CLI v2 with an account and permissions to create VPC, Subnets, IGW, Route Tables, RDS, IAM
+- An AWS CLI profile (defaults to `terraform`), or override via Terraform variables
 
-├── route_tables/      # Route tables
+---
 
-├── security_groups/   # Security groups
+## 🔐 Configure AWS and parameters
 
-├── ssm/               # SSM parameters
-
-├── subnets/           # Public & private subnets
-
-├── vpc/               # VPC configuration
-│
-
-├── europe.tfvars      # Environment variables
-
-├── tf.sh              # Helper script
-
-├── .gitignore
-
-└── README.md
-
-
-## Preparations
-1) Create an aws configuration called "terraform" to use it as the profile as specified in the root providers.tf file
-
-2) Create the following parameters in the SSM parameter store in the "eu-central-1"-region:
-| Name                            | Description               | Tier     | Type         | Data Type | Value              |
-| ------------------------------- | ------------------------- | -------- | ------------ | --------- | ------------------ |
-| `/dev/wp/DBUser`         | Wordpress Database User   | Standard | String       | text      | set value          |
-| `/dev/wp/DBName`         | Wordpress Database Name   | Standard | String       | text      | set value          |
-| `/dev/wp/DBPassword`     | Wordpress DB Password     | Standard | SecureString | text      | set value          |
-| `/dev/wp/DBRootPassword` | Wordpress DBRoot Password | Standard | SecureString | text      | set value          |
-
-
-
-## Usage
+1) Configure an AWS profile named `terraform` (or choose your own and override `aws_profile`):
 
 ```bash
-# Apply all stacks in order
-./tf.sh apply
+aws configure --profile terraform
+```
 
-# Destroy all stacks in reverse order
-./tf.sh destroy
+2) Create SSM Parameter Store values for the DB credentials (defaults assume `env=dev`, `name_prefix=wp` so the paths are `/dev/wp/...`). Replace placeholders as needed:
+/dev/wp/DBUser
+/dev/wp/DBPassword
+/dev/wp/DBName
+ 
 
-# Apply all stacks starting at e.g. ec2
-./tf.sh apply ec2
+---
 
-# Destroy all stacks in reverse order starting at e.g. ec2
-./tf.sh destroy ec2
+## Deploy (apply) in order
+Run each stack from its directory. The `storage` stack reads local state from `dev/network/terraform.tfstate`, so apply `network` first.
+
+Network (VPC, subnets, IGW, route tables, SGs):
+```bash
+cd terraform/dev/network
+terraform init -upgrade
+terraform apply
+```
+
+IAM (role, instance profile):
+```bash
+cd ../iam
+terraform init
+terraform apply
+```
+
+Storage (RDS instance, using SSM params and network state):
+```bash
+cd ../storage
+terraform init
+terraform apply
+```
+
+---
+
+## 🗑️ Destroy in reverse order
+```bash
+cd terraform/dev/storage && terraform destroy
+cd ../iam && terraform destroy
+cd ../network && terraform destroy
+```
