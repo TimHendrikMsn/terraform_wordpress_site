@@ -33,4 +33,5 @@ variable "map_public_ip_on_launch" {
   type        = bool
   default     = false
 }
- 
+
+#### security group variables ####

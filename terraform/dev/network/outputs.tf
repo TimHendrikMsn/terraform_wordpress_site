@@ -1,7 +1,23 @@
+##### VPC Outputs ####
+output "vpc_id" {
+  description = "VPC id."
+  value       = module.vpc.vpc_id
+}
+
 #### IGW Outputs ####
 output "igw_id" {
   description = "Internet Gateway id."
   value       = module.igw.igw_id
+}
+
+#### Security Groups Outputs ####
+output "sg_entrypoint_id" {
+  description = "Entry Point Security Group id."
+  value       = module.sg_entrypoint.sg_id
+}
+output "sg_database_id" {
+  description = "Database Security Group id." 
+  value       = module.sg_database.sg_id
 }
 
 #### Subnet Outputs ####
