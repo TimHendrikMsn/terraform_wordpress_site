@@ -1,3 +1,11 @@
+#### IGW Outputs ####
+output "igw_id" {
+  description = "Internet Gateway id."
+  value       = module.igw.igw_id
+}
+
+#### Subnet Outputs ####
+
 output "pub_a_id" {
   description = "Public Subnet A id."
   value       = module.subnet_pub_a.subnet_id

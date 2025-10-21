@@ -6,6 +6,14 @@ module "vpc" {
   cidr_block = var.vpc_cidr_block
 }
 
+module "igw" {
+  source      = "../../modules/igw"
+  env         = var.env
+  name_prefix = var.name_prefix
+
+  vpc_id = module.vpc.vpc_id
+}
+
 module "subnet_pub_a" {
   source      = "../../modules/subnets"
   env         = var.env
