@@ -16,7 +16,7 @@ output "sg_entrypoint_id" {
   value       = module.sg_entrypoint.sg_id
 }
 output "sg_database_id" {
-  description = "Database Security Group id." 
+  description = "Database Security Group id."
   value       = module.sg_database.sg_id
 }
 

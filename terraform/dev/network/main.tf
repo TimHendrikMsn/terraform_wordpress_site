@@ -19,15 +19,15 @@ module "sg_entrypoint" {
   env         = var.env
   name_prefix = var.name_prefix
   sg_suffix   = "entrypoint-tcp"
-  
+
   name        = "SG EntryPoint TCP"
   description = "Allow TCP IN and all OUT"
-  vpc_id = module.vpc.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   ingress_description = "Allow TCP IN"
-  ingress_from_port = 80
-  ingress_to_port   = 80
-  ingress_protocol  = "tcp"
+  ingress_from_port   = 80
+  ingress_to_port     = 80
+  ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
 
   egress_from_port        = 0
@@ -43,10 +43,10 @@ module "sg_database" {
   env         = var.env
   name_prefix = var.name_prefix
   sg_suffix   = "database"
-  
+
   name        = "SG Database"
   description = "Control access to a Database from an Entry Point"
-  vpc_id = module.vpc.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   ingress_description     = "Allow MySQL IN from Entry Point"
   ingress_from_port       = 3306
@@ -178,4 +178,22 @@ module "subnet_db_c" {
   map_public_ip_on_launch = false
   cidr_subnet_ipv6        = cidrsubnet(module.vpc.vpc_ipv6_cidr_block, 8, 9)
   subnet_suffix           = "sn-db-C"
+}
+
+module "aws_route_table_public_with_routes" {
+  source = "../../modules/route_tables"
+
+  env         = var.env
+  name_prefix = var.name_prefix
+  rt_suffix   = "rt-public"
+
+  vpc_id         = module.vpc.vpc_id
+  dest_cidr_ipv4 = "0.0.0.0/0"
+  dest_cidr_ipv6 = "::/0"
+  igw_id         = module.igw.igw_id
+  subnet_ids = [
+    module.subnet_pub_a.subnet_id,
+    module.subnet_pub_b.subnet_id,
+    module.subnet_pub_c.subnet_id,
+  ]
 }
