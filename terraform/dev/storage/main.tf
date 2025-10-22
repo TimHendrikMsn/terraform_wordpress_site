@@ -20,4 +20,5 @@ module "rds" {
   db_instance_class   = var.db_instance_class
   allocated_storage   = var.allocated_storage
   storage_type        = var.storage_type
+  security_groups     = [data.terraform_remote_state.network.outputs.sg_database_id]
 }

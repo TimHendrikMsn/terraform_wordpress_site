@@ -40,3 +40,20 @@ resource "aws_db_instance" "rds" {
 
   tags = { Name = "${var.env}-${var.name_prefix}-rds-instance" }
 }
+
+resource "aws_ssm_parameter" "wordpress_db_endpoint" {
+  name        = "/${var.env}/${var.name_prefix}/DBEndpoint"
+  description = "WordPress RDS DB Endpoint"
+  type        = "String"
+  data_type   = "text"
+  tier        = "Standard"
+
+  value      = aws_db_instance.rds.endpoint
+
+  overwrite  = true
+
+  tags = {
+    Name = "${var.env}-${var.name_prefix}-ssm-db-endpoint"
+  }
+}
+
