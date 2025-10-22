@@ -11,9 +11,9 @@ terraform/
     iam/
     network/
     storage/
-    compute/ (at some point)
+    compute/
   modules/
-    ec2/ (at some point)
+    ec2/
     igw/
     rds/
     route_tables/
