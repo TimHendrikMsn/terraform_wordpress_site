@@ -20,6 +20,7 @@ terraform/
     security_groups/
     subnets/
     vpc/
+  tf.sh
 ```
 
 Each environment (e.g. `terraform/dev`) has its own state and configs, while `terraform/modules` contains reusable building blocks.
