@@ -11,6 +11,7 @@ blue_msg() {
 }
 
 folders=(iam network storage compute)
+modules=(ec2 efs igw launch_template rds route_tables security_groups subnets vpc)
 
 apply() {
   for f in "${folders[@]}"; do
@@ -29,12 +30,24 @@ destroy() {
   done
 }
 
+fmt() {
+  for f in "${folders[@]}"; do
+    terraform -chdir="dev/$f" fmt
+  done
+  for f in "${modules[@]}"; do
+    terraform -chdir="modules/$f" fmt
+  done
+}
+
 case "${1:-apply}" in
   apply)
     apply
     ;;
   destroy)
     destroy
+    ;;
+  fmt)
+    fmt
     ;;
   *)
     echo "Usage: $0 [apply|destroy]" >&2
