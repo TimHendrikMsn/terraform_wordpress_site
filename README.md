@@ -62,7 +62,7 @@ Run all Terraform stacks in dependency order:
 This will:
 
 Initialize and apply each stack under dev/
-Order: network → iam → storage → compute
+Order: iam → network → storage → compute
 
 ## Destroy in reversed order
 Tear down everything in reverse order:
@@ -71,6 +71,6 @@ Tear down everything in reverse order:
 ./tf.sh destroy
 ````
 
-Order: compute → storage → iam → network
+Order: compute → storage → network → iam
 
 
