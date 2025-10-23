@@ -4,14 +4,14 @@ variable "name_prefix" {
   type        = string
 }
 variable "env" {
-    description = "Environment"
-    type        = string
+  description = "Environment"
+  type        = string
 }
 
 variable "security_groups" {
   description = "List of security group IDs to attach to the RDS instance"
-  type       = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "db_subnet_ids" {

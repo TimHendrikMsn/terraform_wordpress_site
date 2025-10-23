@@ -48,9 +48,9 @@ resource "aws_ssm_parameter" "wordpress_db_endpoint" {
   data_type   = "text"
   tier        = "Standard"
 
-  value      = aws_db_instance.rds.endpoint
+  value = aws_db_instance.rds.endpoint
 
-  overwrite  = true
+  overwrite = true
 
   tags = {
     Name = "${var.env}-${var.name_prefix}-ssm-db-endpoint"

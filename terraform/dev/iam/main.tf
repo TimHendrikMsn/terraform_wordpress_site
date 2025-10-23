@@ -12,7 +12,7 @@ resource "aws_iam_role" "wordpress" {
       }
     ]
   })
-  tags = {"name" = "${var.env}-${var.name_prefix}-role"}
+  tags = { "name" = "${var.env}-${var.name_prefix}-role" }
 }
 
 resource "aws_iam_role_policy_attachment" "wordpress" {
@@ -24,12 +24,12 @@ resource "aws_iam_role_policy_attachment" "wordpress" {
 resource "aws_iam_instance_profile" "wordpress" {
   name = "WordpressInstanceProfile"
   role = aws_iam_role.wordpress.name
-  tags = {"name" = "${var.env}-${var.name_prefix}-instance-profile"}
+  tags = { "name" = "${var.env}-${var.name_prefix}-instance-profile" }
 }
 
 
 resource "aws_iam_role_policy" "ssm_params_read" {
-  role   = aws_iam_role.wordpress.name
+  role = aws_iam_role.wordpress.name
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -39,9 +39,9 @@ resource "aws_iam_role_policy" "ssm_params_read" {
         Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.env}/${var.name_prefix}/*"
       },
       {
-        Effect   = "Allow",
-        Action   = ["kms:Decrypt"],
-        Resource = "arn:aws:kms:${var.aws_region}:${data.aws_caller_identity.current.account_id}:alias/aws/ssm",
+        Effect    = "Allow",
+        Action    = ["kms:Decrypt"],
+        Resource  = "arn:aws:kms:${var.aws_region}:${data.aws_caller_identity.current.account_id}:alias/aws/ssm",
         Condition = { StringEquals = { "kms:ViaService" = "ssm.${var.aws_region}.amazonaws.com" } }
       }
     ]
