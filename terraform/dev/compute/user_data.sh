@@ -21,34 +21,16 @@ EFSFSID=$(echo $EFSFSID | sed -e 's/^"//' -e 's/"$//')
 
 #### install Apache, PHP, and Wordpress ####
 dnf -y update
-
-# Add amazon-efs-utils per Stage 4
 dnf install -y wget php-mysqlnd httpd php-fpm php-mysqli mariadb105-server php-json php php-devel stress amazon-efs-utils
 
 systemctl enable httpd
 systemctl start httpd
 
 #### mount EFS for shared wp-content ####
-mkdir -p /var/www/html
 mkdir -p /var/www/html/wp-content
 chown -R ec2-user:apache /var/www/
-chmod 2775 /var/www
-find /var/www -type d -exec chmod 2775 {} \;
-find /var/www -type f -exec chmod 0664 {} \;
-if ! grep -q "/var/www/html/wp-content efs" /etc/fstab; then
-  echo "$EFSFSID:/ /var/www/html/wp-content efs _netdev,tls,iam 0 0" >> /etc/fstab
-fi
-
-for i in {1..24}; do
-  if mountpoint -q /var/www/html/wp-content; then break; fi
-  mount -a -t efs || true
-  sleep 5
-done
-
-if ! mountpoint -q /var/www/html/wp-content; then
-  echo "ERROR: EFS not mounted at /var/www/html/wp-content" >&2
-  exit 1
-fi
+echo -e "$EFSFSID:/ /var/www/html/wp-content efs _netdev,tls,iam 0 0" >> /etc/fstab
+mount -a -t efs defaults
 
 #### install Wordpress ####
 wget http://wordpress.org/latest.tar.gz -P /var/www/html
@@ -68,3 +50,6 @@ sed -i "s/'localhost'/'$DBEndpoint'/g" wp-config.php
 #### set permissions for the files ####
 usermod -a -G apache ec2-user
 chown -R ec2-user:apache /var/www
+chmod 2775 /var/www
+find /var/www -type d -exec chmod 2775 {} \;
+find /var/www -type f -exec chmod 0664 {} \;
