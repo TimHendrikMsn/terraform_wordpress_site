@@ -20,6 +20,11 @@ output "sg_database_id" {
   value       = module.sg_database.sg_id
 }
 
+output "sg_efs_id" {
+  description = "EFS Security Group id."
+  value       = module.sg_efs.sg_id
+}
+
 #### Subnet Outputs ####
 
 output "pub_a_id" {
@@ -46,4 +51,17 @@ output "sn_db_b_id" {
 output "sn_db_c_id" {
   description = "DB Subnet C id."
   value       = module.subnet_db_c.subnet_id
+}
+
+output "sn_app_a_id" {
+  description = "DB Subnet A id."
+  value       = module.subnet_app_a.subnet_id
+}
+output "sn_app_b_id" {
+  description = "DB Subnet B id."
+  value       = module.subnet_app_b.subnet_id
+}
+output "sn_app_c_id" {
+  description = "DB Subnet C id."
+  value       = module.subnet_app_c.subnet_id
 }

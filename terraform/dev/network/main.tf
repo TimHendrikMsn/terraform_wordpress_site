@@ -29,13 +29,6 @@ module "sg_entrypoint" {
   ingress_to_port     = 80
   ingress_protocol    = "tcp"
   ingress_cidr_blocks = ["0.0.0.0/0"]
-
-  egress_from_port        = 0
-  egress_to_port          = 0
-  egress_protocol         = "-1"
-  egress_cidr_blocks      = ["0.0.0.0/0"]
-  egress_ipv6_cidr_blocks = ["::/0"]
-
 }
 
 module "sg_database" {
@@ -53,15 +46,24 @@ module "sg_database" {
   ingress_to_port         = 3306
   ingress_protocol        = "tcp"
   ingress_security_groups = [module.sg_entrypoint.sg_id]
-
-  egress_from_port        = 0
-  egress_to_port          = 0
-  egress_protocol         = "-1"
-  egress_cidr_blocks      = ["0.0.0.0/0"]
-  egress_ipv6_cidr_blocks = ["::/0"]
 }
 
+module "sg_efs" {
+  source      = "../../modules/security_groups"
+  env         = var.env
+  name_prefix = var.name_prefix
+  sg_suffix   = "efs"
 
+  name        = "SG EFS"
+  description = "Control access to the EFS from an Entry Point"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress_description     = "Allow NFS/EFS IPv4 IN from Entry Point"
+  ingress_from_port       = 2049
+  ingress_to_port         = 2049
+  ingress_protocol        = "tcp"
+  ingress_security_groups = [module.sg_entrypoint.sg_id]
+}
 
 module "subnet_pub_a" {
   source      = "../../modules/subnets"

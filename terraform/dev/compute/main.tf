@@ -12,6 +12,7 @@ module "launch_template" {
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {
     ENV         = var.env
     NAME_PREFIX = var.name_prefix
+    REGION      = var.aws_region
   }))
 
 
