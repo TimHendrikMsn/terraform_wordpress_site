@@ -11,7 +11,7 @@ blue_msg() {
 }
 
 folders=(iam network storage compute)
-modules=(ec2 efs igw launch_template rds route_tables security_groups subnets vpc)
+modules=(auto_scaling_group load_balancer efs igw launch_template rds route_tables security_groups subnets vpc)
 
 apply() {
   for f in "${folders[@]}"; do

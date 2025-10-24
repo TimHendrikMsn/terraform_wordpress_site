@@ -1,4 +1,6 @@
 #!/bin/bash -xe
+ALBDNSName=$(aws ssm get-parameters --region "${REGION}" --names "/${ENV}/${NAME_PREFIX}/ALBDNSName" --query Parameters[0].Value)
+ALBDNSName=$(echo $ALBDNSName | sed -e 's/^"//' -e 's/"$//')
 
 #### load SSM parameters ####
 DBPassword=$(aws ssm get-parameters --region "${REGION}" --names "/${ENV}/${NAME_PREFIX}/DBPassword" --with-decryption --query Parameters[0].Value)
@@ -33,19 +35,28 @@ echo -e "$EFSFSID:/ /var/www/html/wp-content efs _netdev,tls,iam 0 0" >> /etc/fs
 mount -a -t efs defaults
 
 #### install Wordpress ####
-wget http://wordpress.org/latest.tar.gz -P /var/www/html
-cd /var/www/html
-tar -zxvf latest.tar.gz
-cp -rvf wordpress/* .
-rm -R wordpress
-rm latest.tar.gz
+if [ ! -f /var/www/html/wp-config.php ]; then
+    wget http://wordpress.org/latest.tar.gz -P /var/www/html
+    cd /var/www/html
+    tar -zxvf latest.tar.gz
+    cp -rvf wordpress/* .
+    rm -R wordpress
+    rm latest.tar.gz
 
-#### configure Wordpress ####
-sudo cp ./wp-config-sample.php ./wp-config.php
-sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
-sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
-sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
-sed -i "s/'localhost'/'$DBEndpoint'/g" wp-config.php
+    #### configure Wordpress ####
+    sudo cp ./wp-config-sample.php ./wp-config.php
+    sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
+    sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
+    sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
+    sed -i "s/'localhost'/'$DBEndpoint'/g" wp-config.php
+
+    awk -v alb="http://$ALBDNSName" '
+    NR==1 {print; print "define('\''WP_HOME'\'', '\''" alb "'\'');"; print "define('\''WP_SITEURL'\'', '\''" alb "'\'');"; next}
+    {print}
+    ' wp-config.php > wp-config.php.new && mv wp-config.php.new wp-config.php
+
+fi
+echo "OK" > /var/www/html/healthcheck.html
 
 #### set permissions for the files ####
 usermod -a -G apache ec2-user

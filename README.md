@@ -8,13 +8,16 @@ A terraform repo to create the network, IAM, and data layers for a WordPress dep
 ```
 terraform/
   dev/
+    compute/
     iam/
     network/
     storage/
-    compute/
   modules/
-    ec2/
+    auto_scaling_group/
+    efs
     igw/
+    launch_template/
+    load_balancer/
     rds/
     route_tables/
     security_groups/
