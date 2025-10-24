@@ -10,6 +10,11 @@ output "igw_id" {
   value       = module.igw.igw_id
 }
 
+output "alb_tg_arn" {
+  description = "ALB target group ARN."
+  value       = module.load_balancer.tg_arn
+}
+
 #### Security Groups Outputs ####
 output "sg_entrypoint_id" {
   description = "Entry Point Security Group id."

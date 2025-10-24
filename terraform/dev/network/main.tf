@@ -13,6 +13,23 @@ module "igw" {
 
   vpc_id = module.vpc.vpc_id
 }
+module "load_balancer" {
+  source      = "../../modules/load_balancer"
+  env         = var.env
+  name_prefix = var.name_prefix
+
+  security_group_ids = [module.sg_entrypoint.sg_id]
+
+  vpc_id = module.vpc.vpc_id
+  subnet_ids = [
+    module.subnet_pub_a.subnet_id,
+    module.subnet_pub_b.subnet_id,
+    module.subnet_pub_c.subnet_id,
+  ]
+  protocol_alb         = "HTTP"
+  port_alb             = 80
+  alb_healthcheck_path = "/"
+}
 
 module "sg_entrypoint" {
   source      = "../../modules/security_groups"
