@@ -14,7 +14,7 @@ terraform/
     storage/
   modules/
     auto_scaling_group/
-    efs
+    efs/
     igw/
     launch_template/
     load_balancer/
